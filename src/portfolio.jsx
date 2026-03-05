@@ -225,7 +225,7 @@ export default function Portfolio() {
     };
     const t = setTimeout(tick, 500);
     return () => clearTimeout(t);
-  }, []);
+  }, [roles]);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
@@ -380,7 +380,7 @@ export default function Portfolio() {
             <button className="btn-o" onClick={() => scrollTo("contact")}>Get In Touch</button>
           </div>
           <div className="fade-up" style={{ animationDelay: "0.7s", display: "flex", gap: 50, marginTop: 60, flexWrap: "wrap" }}>
-            {[["2+", "Years Experience"], ["15+", "Projects Built"], ["10+", "APIs Integrated"]].map(([n, l]) => (
+            {[["2+", "Years Experience"], ["15+", "Projects Built"], ["30+", "Courier APIs Integrated"]].map(([n, l]) => (
               <div key={l}>
                 <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 42, color: "#00f5ff", lineHeight: 1 }}>{n}</div>
                 <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, color: "#333", letterSpacing: 2, marginTop: 4 }}>{l.toUpperCase()}</div>
