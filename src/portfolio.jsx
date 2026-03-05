@@ -35,6 +35,22 @@ const PROJECTS = [
     color: "#ffd60a",
     icon: "🔗",
   },
+  {
+    id: 5,
+    title: "Custom WordPress Plugin",
+    desc: "Developed feature-rich custom WordPress plugins with admin panels, shortcodes, hooks & filters, and seamless WooCommerce integration for extended site functionality.",
+    tags: ["WordPress", "PHP", "WooCommerce", "Hooks & Filters"],
+    color: "#ff6b6b",
+    icon: "🔧",
+  },
+  {
+    id: 6,
+    title: "WordPress Theme Development",
+    desc: "Built fully custom WordPress themes from scratch — pixel-perfect responsive designs with custom post types, ACF fields, and optimized performance scores.",
+    tags: ["WordPress", "PHP", "ACF", "Responsive Design"],
+    color: "#00c9a7",
+    icon: "🎨",
+  },
 ];
 
 const SKILLS = [
@@ -51,6 +67,7 @@ const TECH_TAGS = [
   "HTML/CSS", "Git", "Postman", "Payment Gateways",
   "Shipping APIs", "Verification APIs", "Query Optimization",
   "Data Validation", "Secure Auth", "OOP",
+  "WordPress", "WooCommerce", "ACF", "Custom Plugins", "Theme Dev",
 ];
 
 function ParticleField() {
@@ -184,6 +201,7 @@ function ProjectCard({ p, i }) {
 export default function Portfolio() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("Home");
+  const [menuOpen, setMenuOpen] = useState(false);
   const [typedText, setTypedText] = useState("");
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
@@ -267,6 +285,12 @@ export default function Portfolio() {
           .about-grid,.skills-grid,.contact-grid{grid-template-columns:1fr !important}
           .hide-mobile{display:none !important}
           .hero-btns{flex-direction:column !important;align-items:flex-start !important}
+          .desktop-nav-links{display:none !important}
+          .hamburger{display:flex !important}
+          .mobile-menu{display:flex !important}
+          .footer-inner{flex-direction:column !important;align-items:center !important;text-align:center !important;gap:12px !important}
+          #home{padding-top:90px !important;align-items:flex-start !important;padding-bottom:40px}
+          .wrap{padding:0 18px}
         }
       `}</style>
 
@@ -275,30 +299,64 @@ export default function Portfolio() {
       {/* NAV */}
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-        padding: "14px 32px", display: "flex", justifyContent: "space-between", alignItems: "center",
-        background: scrolled ? "rgba(7,7,26,0.9)" : "transparent",
-        backdropFilter: scrolled ? "blur(24px)" : "none",
-        borderBottom: scrolled ? "1px solid #1a1a30" : "1px solid transparent",
+        padding: "12px 20px",
+        background: (scrolled || menuOpen) ? "rgba(7,7,26,0.97)" : "transparent",
+        backdropFilter: (scrolled || menuOpen) ? "blur(24px)" : "none",
+        borderBottom: (scrolled || menuOpen) ? "1px solid #1a1a30" : "1px solid transparent",
         transition: "all 0.4s",
       }}>
-        <div onClick={() => scrollTo("home")} style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 24, color: "#00f5ff", letterSpacing: 2, cursor: "pointer" }}>
-          ARHAM.DEV
-        </div>
-        <div style={{ display: "flex", gap: 2 }}>
-          {NAV_LINKS.map(l => (
-            <button key={l} className="nav-btn" onClick={() => scrollTo(l.toLowerCase())}
-              style={{ color: activeSection === l ? "#00f5ff" : "#555", background: activeSection === l ? "#00f5ff12" : "transparent" }}>
-              {l}
+        {/* Top bar: logo + desktop links + hamburger */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div onClick={() => scrollTo("home")} style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 24, color: "#00f5ff", letterSpacing: 2, cursor: "pointer" }}>
+            ARHAM.DEV
+          </div>
+
+          {/* Desktop links */}
+          <div className="desktop-nav-links" style={{ display: "flex", gap: 2, alignItems: "center" }}>
+            {NAV_LINKS.map(l => (
+              <button key={l} className="nav-btn" onClick={() => scrollTo(l.toLowerCase())}
+                style={{ color: activeSection === l ? "#00f5ff" : "#555", background: activeSection === l ? "#00f5ff12" : "transparent" }}>
+                {l}
+              </button>
+            ))}
+            <button className="btn-p" style={{ padding: "9px 20px", fontSize: 10, marginLeft: 8 }} onClick={() => scrollTo("contact")}>
+              Hire Me
             </button>
-          ))}
+          </div>
+
+          {/* Hamburger button — mobile only */}
+          <button
+            className="hamburger"
+            onClick={() => setMenuOpen(o => !o)}
+            style={{ background: "none", border: "1px solid #1e1e3a", borderRadius: 8, cursor: "pointer", padding: "8px 10px", display: "none", flexDirection: "column", gap: 5 }}
+          >
+            <span style={{ display: "block", width: 22, height: 2, background: menuOpen ? "#00f5ff" : "#aaa", borderRadius: 2, transition: "all 0.3s", transform: menuOpen ? "rotate(45deg) translate(5px,5px)" : "none" }} />
+            <span style={{ display: "block", width: 22, height: 2, background: menuOpen ? "transparent" : "#aaa", borderRadius: 2, transition: "opacity 0.3s", opacity: menuOpen ? 0 : 1 }} />
+            <span style={{ display: "block", width: 22, height: 2, background: menuOpen ? "#00f5ff" : "#aaa", borderRadius: 2, transition: "all 0.3s", transform: menuOpen ? "rotate(-45deg) translate(5px,-5px)" : "none" }} />
+          </button>
         </div>
-        <button className="btn-p" style={{ padding: "9px 20px", fontSize: 10 }} onClick={() => scrollTo("contact")}>
-          Hire Me
-        </button>
+
+        {/* Mobile dropdown */}
+        {menuOpen && (
+          <div className="mobile-menu" style={{
+            display: "none", flexDirection: "column", gap: 4,
+            borderTop: "1px solid #1a1a30", marginTop: 14, paddingTop: 14, paddingBottom: 8,
+          }}>
+            {NAV_LINKS.map(l => (
+              <button key={l} className="nav-btn" onClick={() => { scrollTo(l.toLowerCase()); setMenuOpen(false); }}
+                style={{ color: activeSection === l ? "#00f5ff" : "#888", background: activeSection === l ? "#00f5ff0e" : "transparent", textAlign: "left", width: "100%", padding: "12px 8px", fontSize: 13, letterSpacing: 1 }}>
+                {l}
+              </button>
+            ))}
+            <button className="btn-p" style={{ marginTop: 10, width: "100%", padding: "13px", fontSize: 12 }} onClick={() => { scrollTo("contact"); setMenuOpen(false); }}>
+              Hire Me
+            </button>
+          </div>
+        )}
       </nav>
 
       {/* HERO */}
-      <div id="home" style={{ minHeight: "100vh", display: "flex", alignItems: "center", position: "relative", zIndex: 1 }}>
+      <div id="home" style={{ minHeight: "100vh", display: "flex", alignItems: "center", position: "relative", zIndex: 1, paddingTop: 80 }}>
         <div className="wrap" style={{ width: "100%" }}>
           <div className="fade-up" style={{ animationDelay: "0.1s", fontFamily: "'Space Mono',monospace", fontSize: 12, letterSpacing: 4, color: "#00f5ff66", marginBottom: 18, textTransform: "uppercase" }}>
             👋 Hello, I'm
@@ -461,13 +519,17 @@ export default function Portfolio() {
                 Looking for a backend developer who writes clean PHP, crafts reliable APIs, and delivers on time? Let's talk — I'm always open to new opportunities and collaborations.
               </p>
               {[
-                { icon: "📧", label: "arhamaamir@email.com" },
-                { icon: "💼", label: "Orio Technologies" },
-                { icon: "📍", label: "Pakistan" },
+                { icon: "📧", label: "sheikharha799@gmail.com", href: "mailto:sheikharha799@gmail.com" },
+                { icon: "💼", label: "Orio Technologies", href: null },
+                { icon: "📍", label: "Pakistan", href: null },
               ].map(item => (
                 <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 18 }}>
                   <span style={{ fontSize: 18 }}>{item.icon}</span>
-                  <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 12, color: "#444" }}>{item.label}</span>
+                  {item.href ? (
+                    <a href={item.href} style={{ fontFamily: "'Space Mono',monospace", fontSize: 12, color: "#00f5ff", textDecoration: "none" }}>{item.label}</a>
+                  ) : (
+                    <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 12, color: "#444" }}>{item.label}</span>
+                  )}
                 </div>
               ))}
               <div style={{ marginTop: 36, padding: "18px 22px", background: "#0d0d1a", border: "1px solid #00f5ff1a", borderRadius: 14 }}>
@@ -490,7 +552,12 @@ export default function Portfolio() {
                 <input className="field" placeholder="Your Name" value={form.name} onChange={e => setForm(s => ({ ...s, name: e.target.value }))} />
                 <input className="field" placeholder="Your Email" type="email" value={form.email} onChange={e => setForm(s => ({ ...s, email: e.target.value }))} />
                 <textarea className="field" placeholder="Tell me about your project..." rows={5} value={form.message} onChange={e => setForm(s => ({ ...s, message: e.target.value }))} style={{ resize: "vertical" }} />
-                <button className="btn-p" style={{ alignSelf: "flex-start" }} onClick={() => { if (form.name && form.email && form.message) setSent(true); }}>
+                <button className="btn-p" style={{ alignSelf: "flex-start" }} onClick={() => {
+                  if (form.name && form.email && form.message) {
+                    window.location.href = `mailto:sheikharha799@gmail.com?subject=Portfolio Inquiry from ${encodeURIComponent(form.name)}&body=${encodeURIComponent(form.message)}%0A%0AFrom: ${encodeURIComponent(form.email)}`;
+                    setSent(true);
+                  }
+                }}>
                   Send Message →
                 </button>
               </div>
@@ -500,17 +567,24 @@ export default function Portfolio() {
       </section>
 
       {/* FOOTER */}
-      <footer style={{ position: "relative", zIndex: 1, borderTop: "1px solid #12122a", padding: "26px 32px", maxWidth: 1080, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-        <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 20, color: "#00f5ff", letterSpacing: 2 }}>ARHAM.DEV</span>
-        <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, color: "#222" }}>© 2026 Arham Aamir — PHP Developer</span>
-        <div style={{ display: "flex", gap: 20 }}>
-          {["GitHub", "LinkedIn", "Email"].map(l => (
-            <a key={l} href="#" style={{ fontFamily: "'Space Mono',monospace", fontSize: 11, color: "#2a2a4a", textDecoration: "none", transition: "color 0.2s" }}
-              onMouseEnter={e => e.currentTarget.style.color = "#00f5ff"}
-              onMouseLeave={e => e.currentTarget.style.color = "#2a2a4a"}>
-              {l}
-            </a>
-          ))}
+      <footer style={{ position: "relative", zIndex: 1, borderTop: "1px solid #12122a", padding: "24px 20px" }}>
+        <div className="footer-inner" style={{ maxWidth: 1080, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+          <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 20, color: "#00f5ff", letterSpacing: 2 }}>ARHAM.DEV</span>
+          <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, color: "#222", textAlign: "center" }}>© 2026 Arham Aamir — PHP Developer</span>
+          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", justifyContent: "center" }}>
+            {[
+              { label: "GitHub", href: "https://github.com/sheikharhamm" },
+              { label: "LinkedIn", href: "https://www.linkedin.com/in/arham-aamir-636b16275" },
+              { label: "Email", href: "mailto:sheikharha799@gmail.com" },
+            ].map(l => (
+              <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"
+                style={{ fontFamily: "'Space Mono',monospace", fontSize: 11, color: "#2a2a4a", textDecoration: "none", transition: "color 0.2s" }}
+                onMouseEnter={e => e.currentTarget.style.color = "#00f5ff"}
+                onMouseLeave={e => e.currentTarget.style.color = "#2a2a4a"}>
+                {l.label}
+              </a>
+            ))}
+          </div>
         </div>
       </footer>
     </>
