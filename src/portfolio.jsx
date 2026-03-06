@@ -236,6 +236,7 @@ export default function Portfolio() {
   const scrollTo = (id) => {
     document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: "smooth" });
     setActiveSection(id);
+    
   };
 
   return (
