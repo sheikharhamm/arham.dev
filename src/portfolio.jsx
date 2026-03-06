@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 const NAV_LINKS = ["Home", "About", "Skills", "Projects", "Contact"];
 
@@ -206,7 +206,12 @@ export default function Portfolio() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
 
-  const roles = ["Backend Developer", "PHP Specialist", "API Engineer", "Problem Solver"];
+  const roles = useMemo(() => [
+    "Backend Developer",
+    "PHP Specialist",
+    "API Engineer",
+    "Problem Solver"
+  ], []);
   const roleRef = useRef(0), charRef = useRef(0), delRef = useRef(false);
 
   useEffect(() => {
@@ -236,7 +241,7 @@ export default function Portfolio() {
   const scrollTo = (id) => {
     document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: "smooth" });
     setActiveSection(id);
-    
+
   };
 
   return (
