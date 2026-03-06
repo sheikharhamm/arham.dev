@@ -224,8 +224,8 @@ export default function Portfolio() {
         SERVICE_ID,
         TEMPLATE_ID,
         {
-          from_name:    form.name,
-          from_email:   form.email,
+          name:    form.name,
+          title:   form.email,
           message:      form.message,
           to_email:     "sheikharha799@gmail.com",
         },
