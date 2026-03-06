@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
+import emailjs from "@emailjs/browser";
 
 const NAV_LINKS = ["Home", "About", "Skills", "Projects", "Contact"];
 
@@ -205,13 +206,40 @@ export default function Portfolio() {
   const [typedText, setTypedText] = useState("");
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState("");
 
-  const roles = useMemo(() => [
-    "Backend Developer",
-    "PHP Specialist",
-    "API Engineer",
-    "Problem Solver"
-  ], []);
+  // ── EmailJS credentials ──────────────────────────────────────────
+  // Replace these with your actual EmailJS credentials from https://emailjs.com
+  const SERVICE_ID  = "service_7xx60uc";   // ← Your Service ID
+  const TEMPLATE_ID = "template_gmnabk7";  // ← Your Template ID
+  const PUBLIC_KEY  = "WVNhgVGEn4fNk1rs2"; // ← Your Public Key
+
+  const handleSend = async () => {
+    if (!form.name || !form.email || !form.message) return;
+    setSending(true);
+    setSendError("");
+    try {
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          from_name:    form.name,
+          from_email:   form.email,
+          message:      form.message,
+          to_email:     "sheikharha799@gmail.com",
+        },
+        PUBLIC_KEY
+      );
+      setSent(true);
+    } catch (err) {
+      setSendError("Failed to send. Please try again or email me directly.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const roles = useMemo(() => ["Backend Developer", "PHP Specialist", "API Engineer", "Problem Solver"], []);
   const roleRef = useRef(0), charRef = useRef(0), delRef = useRef(false);
 
   useEffect(() => {
@@ -241,7 +269,6 @@ export default function Portfolio() {
   const scrollTo = (id) => {
     document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: "smooth" });
     setActiveSection(id);
-
   };
 
   return (
@@ -386,7 +413,7 @@ export default function Portfolio() {
             <button className="btn-o" onClick={() => scrollTo("contact")}>Get In Touch</button>
           </div>
           <div className="fade-up" style={{ animationDelay: "0.7s", display: "flex", gap: 50, marginTop: 60, flexWrap: "wrap" }}>
-            {[["2+", "Years Experience"], ["15+", "Projects Built"], ["30+", "Courier APIs Integrated"]].map(([n, l]) => (
+            {[["2+", "Years Experience"], ["15+", "Projects Built"], ["10+", "APIs Integrated"]].map(([n, l]) => (
               <div key={l}>
                 <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 42, color: "#00f5ff", lineHeight: 1 }}>{n}</div>
                 <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, color: "#333", letterSpacing: 2, marginTop: 4 }}>{l.toUpperCase()}</div>
@@ -558,13 +585,16 @@ export default function Portfolio() {
                 <input className="field" placeholder="Your Name" value={form.name} onChange={e => setForm(s => ({ ...s, name: e.target.value }))} />
                 <input className="field" placeholder="Your Email" type="email" value={form.email} onChange={e => setForm(s => ({ ...s, email: e.target.value }))} />
                 <textarea className="field" placeholder="Tell me about your project..." rows={5} value={form.message} onChange={e => setForm(s => ({ ...s, message: e.target.value }))} style={{ resize: "vertical" }} />
-                <button className="btn-p" style={{ alignSelf: "flex-start" }} onClick={() => {
-                  if (form.name && form.email && form.message) {
-                    window.location.href = `mailto:sheikharha799@gmail.com?subject=Portfolio Inquiry from ${encodeURIComponent(form.name)}&body=${encodeURIComponent(form.message)}%0A%0AFrom: ${encodeURIComponent(form.email)}`;
-                    setSent(true);
-                  }
-                }}>
-                  Send Message →
+                {sendError && (
+                  <p style={{ color: "#ff6b6b", fontFamily: "'Space Mono',monospace", fontSize: 12, marginTop: -4 }}>{sendError}</p>
+                )}
+                <button
+                  className="btn-p"
+                  style={{ alignSelf: "flex-start", opacity: sending ? 0.7 : 1, cursor: sending ? "not-allowed" : "pointer" }}
+                  onClick={handleSend}
+                  disabled={sending}
+                >
+                  {sending ? "Sending..." : "Send Message →"}
                 </button>
               </div>
             )}
