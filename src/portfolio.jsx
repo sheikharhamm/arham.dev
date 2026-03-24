@@ -258,7 +258,7 @@ export default function Portfolio() {
     };
     const t = setTimeout(tick, 500);
     return () => clearTimeout(t);
-  }, []);
+  }, [roles]);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
