@@ -211,9 +211,9 @@ export default function Portfolio() {
 
   // ── EmailJS credentials ──────────────────────────────────────────
   // Replace these with your actual EmailJS credentials from https://emailjs.com
-  const SERVICE_ID  = "service_7xx60uc";   // ← Your Service ID
-  const TEMPLATE_ID = "template_gmnabk7";  // ← Your Template ID
-  const PUBLIC_KEY  = "WVNhgVGEn4fNk1rs2"; // ← Your Public Key
+  const SERVICE_ID  = "service_XXXXXXXX";   // ← Your Service ID
+  const TEMPLATE_ID = "template_XXXXXXXX";  // ← Your Template ID
+  const PUBLIC_KEY  = "XXXXXXXXXXXXXXXXXXXX"; // ← Your Public Key
 
   const handleSend = async () => {
     if (!form.name || !form.email || !form.message) return;
@@ -224,8 +224,8 @@ export default function Portfolio() {
         SERVICE_ID,
         TEMPLATE_ID,
         {
-          name:    form.name,
-          title:   form.email,
+          from_name:    form.name,
+          from_email:   form.email,
           message:      form.message,
           to_email:     "sheikharha799@gmail.com",
         },
@@ -258,12 +258,36 @@ export default function Portfolio() {
     };
     const t = setTimeout(tick, 500);
     return () => clearTimeout(t);
-  }, [roles]);
+  }, []);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  // ── Active section tracker on scroll ────────────────────────────
+  useEffect(() => {
+    const sectionIds = NAV_LINKS.map(l => l.toLowerCase());
+    const observers = [];
+
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            const matched = NAV_LINKS.find(l => l.toLowerCase() === id);
+            if (matched) setActiveSection(matched);
+          }
+        },
+        { threshold: 0.35, rootMargin: "-60px 0px -35% 0px" }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+
+    return () => observers.forEach(o => o.disconnect());
   }, []);
 
   const scrollTo = (id) => {
